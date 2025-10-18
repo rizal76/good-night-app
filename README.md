@@ -44,6 +44,10 @@ Copy `.env.example` to `.env` and edit if needed.
   ```sh
   docker-compose run --rm api bin/rails db:migrate
   ```
+- Run rubocop
+  ```sh
+  docker-compose run --rm api bundle exec rubocop -f github
+  ```
 
 ## Stack
 - Ruby on Rails (API-only)
