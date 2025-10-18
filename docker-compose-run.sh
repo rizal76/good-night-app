@@ -1,5 +1,5 @@
 #!/bin/bash
 # docker-compose-run
-export UID=$(id -u)
-export GID=$(id -g)
-docker-compose run --rm "$@"
+export USER_ID=$(id -u)
+export GROUP_ID=$(id -g)
+docker-compose run --rm -e USER_ID -e GROUP_ID "$@"

@@ -52,6 +52,12 @@ group :development, :test do
 
   # Environment (.env) variables
   gem "dotenv-rails"
+
+  # FactoryBot for test data generation
+  gem "factory_bot_rails"
+  
+  # Shoulda Matchers for testing Rails models
+  gem "shoulda-matchers"
 end
 
 group :development do
