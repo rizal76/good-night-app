@@ -25,6 +25,9 @@ services:
     command: bundle exec rails server -b 0.0.0.0
     volumes:
       - .:/app
+      - .:/app:cached
+      # ✅ FIXED: Shared bundle cache volume
+      - bundle_cache:/usr/local/bundle
     ports:
       - "3000:3000"
     env_file:
@@ -41,5 +44,7 @@ services:
     tty: true
 
 volumes:
+  bundle_cache:
+    driver: local
   db_data:
   redis_data:
