@@ -4,7 +4,6 @@ class SleepRecord < ApplicationRecord
 
   # Validations
   validates :clock_in_time, presence: true
-  validates :clock_out_time, presence: true, if: :clocked_out?
   validate :clock_out_after_clock_in, if: :clock_out_time?
   validate :no_overlapping_sessions, on: :create
 
