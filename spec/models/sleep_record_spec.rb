@@ -127,7 +127,6 @@ RSpec.describe SleepRecord, type: :model do
 
       it 'returns records ordered by created_at desc' do
         records = SleepRecord.recent
-        p records
         expect(records.first).to eq(new_record)
         expect(records.last).to eq(old_record)
       end

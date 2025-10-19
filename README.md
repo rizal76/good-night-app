@@ -25,8 +25,8 @@ Copy `.env.example` to `.env` and edit if needed.
 2. **Set up the database:**
    (Runs database migrations and seeds)
    ```sh
-   ./docker-compose-run.sh run --rm api bin/rails db:migrate
-   ./docker-compose-run.sh run --rm api bin/rails db:setup
+   ./docker-compose-run.sh api bin/rails db:migrate
+   ./docker-compose-run.sh api bin/rails db:setup
    ```
 
 3. **Start the full stack:**

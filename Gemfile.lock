@@ -352,6 +352,7 @@ GEM
     thor (1.4.0)
     thruster (0.1.15-aarch64-linux)
     thruster (0.1.15-x86_64-linux)
+    timecop (0.9.10)
     timeout (0.4.3)
     tsort (0.2.0)
     turbo-rails (2.0.17)
@@ -407,6 +408,7 @@ DEPENDENCIES
   solid_queue
   stimulus-rails
   thruster
+  timecop
   turbo-rails
   tzinfo-data
   web-console
