@@ -33,7 +33,7 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/postgres
+      - DATABASE_URL=postgresql://postgres:password@db:5432/good_night_app_db_dev
       - REDIS_URL=redis://redis:6379/1
       - RAILS_LOG_TO_STDOUT=true
       - RAILS_ENV=development
