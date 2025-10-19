@@ -19,7 +19,7 @@ Copy `.env.example` to `.env` and edit if needed.
 
 1. **Build containers:**
    ```sh
-   ./docker-compose-run.sh build
+   docker-compose build
    ```
 
 2. **Set up the database:**
@@ -29,13 +29,19 @@ Copy `.env.example` to `.env` and edit if needed.
    ./docker-compose-run.sh api bin/rails db:setup
    ```
 
-3. **Start the full stack:**
+3. **Seed sample data:**
+   (Creates sample users, sleep records, and follow relationships)
+   ```sh
+   ./docker-compose-run.sh api bin/rails db:seed
+   ```
+
+4. **Start the full stack:**
    ```sh
    ./docker-compose-run.sh up
    ```
    Rails API will be available at http://localhost:3000
 
-4. **Stop services:** Press Ctrl-C or run
+5. **Stop services:** Press Ctrl-C or run
    ```sh
    ./docker-compose-run.sh down
    ```
@@ -48,6 +54,10 @@ Copy `.env.example` to `.env` and edit if needed.
 - Run database migrations manually:
   ```sh
   ./docker-compose-run.sh run --rm api bin/rails db:migrate
+  ```
+- Seed sample data:
+  ```sh
+  ./docker-compose-run.sh run --rm api bin/rails db:seed
   ```
 - Run rubocop
   ```sh
