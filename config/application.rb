@@ -16,6 +16,12 @@ module App
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
+    # Custom application config
+    config.sleep = ActiveSupport::OrderedOptions.new
+    config.sleep.min_duration_seconds = 600
+    config.default_page = 1
+    config.default_per_page = 20
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
