@@ -66,7 +66,8 @@ class ClockInService
 
   def load_sleep_records
     cache_key = "user_#{user.id}_sleep_records_page_#{page}_per_#{per_page}_#{user.sleep_records.maximum(:updated_at)&.to_i}"
-    @sleep_records = Rails.cache.fetch(cache_key, expires_in: 2.minutes) do
+    expires_in = Rails.configuration.sleep_record.cache_duration
+    @sleep_records = Rails.cache.fetch(cache_key, expires_in: expires_in) do
       user.sleep_records.order(created_at: :desc).page(page).per(per_page).to_a
     end
     @pagination = {

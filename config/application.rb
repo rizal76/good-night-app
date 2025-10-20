@@ -17,10 +17,12 @@ module App
     config.autoload_lib(ignore: %w[assets tasks])
 
     # Custom application config
-    config.sleep = ActiveSupport::OrderedOptions.new
-    config.sleep.min_duration_seconds = 600
     config.default_page = 1
     config.default_per_page = 20
+    config.sleep = ActiveSupport::OrderedOptions.new
+    config.sleep.min_duration_seconds = 600
+    config.sleep_record = ActiveSupport::OrderedOptions.new
+    config.sleep_record.cache_duration = 2.minutes
 
     # Configuration for the application, engines, and railties goes here.
     #
