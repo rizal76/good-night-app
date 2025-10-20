@@ -75,6 +75,10 @@ RSpec.configure do |config|
 
   # Include FactoryBot methods
   config.include FactoryBot::Syntax::Methods
+  # Set default host for ALL request specs
+  config.before(:each, type: :request) do
+    host! "localhost:#{Capybara.current_driver == :rack_test ? 3000 : 3001}"
+  end
 end
 
 # Shoulda Matchers configuration
