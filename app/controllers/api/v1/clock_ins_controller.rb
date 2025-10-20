@@ -30,7 +30,7 @@ class Api::V1::ClockInsController < ApplicationController
         success: false,
         message: 'Failed to record',
         errors: service.errors.full_messages
-      }, status: :unprocessable_entity
+      }, status: :unprocessable_content
     end
   end
 

@@ -125,7 +125,7 @@ RSpec.describe 'Api::V1::ClockIns', type: :request do
               post "/api/v1/users/#{clocked_in_user.id}/clock_ins"
             }.not_to change { clocked_in_user.sleep_records.count }
 
-            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response).to have_http_status(:unprocessable_content)
             
             json_response = JSON.parse(response.body)
             expect(json_response['success']).to be false
@@ -195,7 +195,7 @@ RSpec.describe 'Api::V1::ClockIns', type: :request do
       it 'returns unprocessable entity with error message' do
         post "/api/v1/users/#{user.id}/clock_ins"
         
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         
         json_response = JSON.parse(response.body)
         expect(json_response['success']).to be false
@@ -224,7 +224,7 @@ RSpec.describe 'Api::V1::ClockIns', type: :request do
         
         post "/api/v1/users/#{user.id}/clock_ins", params: { page: "invalid", per_page: "invalid" }
         
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         
         json_response = JSON.parse(response.body)
         expect(json_response['success']).to be false

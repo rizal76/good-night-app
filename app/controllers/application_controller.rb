@@ -21,7 +21,7 @@ class ApplicationController < ActionController::API
       success: false,
       message: 'Validation failed',
       errors: exception.record.errors.full_messages
-    }, status: :unprocessable_entity
+    }, status: :unprocessable_content
   end
 
   def internal_server_error(exception)
