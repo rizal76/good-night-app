@@ -36,7 +36,7 @@ class ClockInService
         @sleep_record = user.sleep_records.create!(clock_in_time: clock_in_time)
       end
     end
-    
+
     load_sleep_records
     true
   rescue => e
@@ -52,12 +52,12 @@ class ClockInService
 
   def user_exists
     return if user.present?
-    errors.add(:user_id, 'User not found')
+    errors.add(:user_id, "User not found")
   end
 
   def clock_in_time_not_future
     return unless clock_in_time && clock_in_time > Time.current
-    errors.add(:clock_in_time, 'cannot be in the future')
+    errors.add(:clock_in_time, "cannot be in the future")
   end
 
   def min_duration

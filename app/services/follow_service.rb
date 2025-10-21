@@ -29,7 +29,7 @@ class FollowService
     if existing&.destroy
       existing
     else
-      errors.add(:base, 'Not following this user')
+      errors.add(:base, "Not following this user")
       nil
     end
   end
@@ -37,15 +37,15 @@ class FollowService
   private
 
   def follower_and_followed_are_different
-    errors.add(:followed_id, 'cannot follow yourself') if follower_id == followed_id
+    errors.add(:followed_id, "cannot follow yourself") if follower_id == followed_id
   end
 
   def follower_exists
-    errors.add(:follower_id, 'Follower user not found') if User.find_by(id: follower_id).nil?
+    errors.add(:follower_id, "Follower user not found") if User.find_by(id: follower_id).nil?
   end
 
   def followed_exists
-    errors.add(:followed_id, 'Followed user not found') if User.find_by(id: followed_id).nil?
+    errors.add(:followed_id, "Followed user not found") if User.find_by(id: followed_id).nil?
   end
 
   def valid_for_unfollow?

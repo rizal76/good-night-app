@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user do
     sequence(:name) { |n| "User #{n}" }
-    
+
     trait :with_sleep_records do
       after(:create) do |user|
         create_list(:sleep_record, 3, user: user)

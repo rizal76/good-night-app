@@ -55,7 +55,7 @@ group :development, :test do
 
   # FactoryBot for test data generation
   gem "factory_bot_rails"
-  
+
   # Shoulda Matchers for testing Rails models
   gem "shoulda-matchers"
 end
@@ -73,5 +73,5 @@ group :test do
 end
 
 gem "kaminari"
-gem 'blueprinter'
-gem 'rspec-rails', group: [:development, :test]
+gem "blueprinter"
+gem "rspec-rails", group: [ :development, :test ]

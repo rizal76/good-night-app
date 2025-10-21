@@ -14,9 +14,9 @@ RSpec.describe SleepRecord, type: :model do
       describe 'clock_out_after_clock_in' do
         context 'when clock_out_time is before clock_in_time' do
           let(:sleep_record) do
-            build(:sleep_record, 
-                  user: user, 
-                  clock_in_time: 1.hour.ago, 
+            build(:sleep_record,
+                  user: user,
+                  clock_in_time: 1.hour.ago,
                   clock_out_time: 2.hours.ago)
           end
 
@@ -28,9 +28,9 @@ RSpec.describe SleepRecord, type: :model do
 
         context 'when clock_out_time is after clock_in_time' do
           let(:sleep_record) do
-            build(:sleep_record, 
-                  user: user, 
-                  clock_in_time: 2.hours.ago, 
+            build(:sleep_record,
+                  user: user,
+                  clock_in_time: 2.hours.ago,
                   clock_out_time: 1.hour.ago)
           end
 
@@ -51,17 +51,17 @@ RSpec.describe SleepRecord, type: :model do
       describe 'no_overlapping_sessions' do
         context 'when creating a new sleep record' do
           let!(:existing_record) do
-            create(:sleep_record, 
-                   user: user, 
-                   clock_in_time: 2.hours.ago, 
+            create(:sleep_record,
+                   user: user,
+                   clock_in_time: 2.hours.ago,
                    clock_out_time: nil)
           end
 
           context 'with overlapping clock_in_time' do
             let(:overlapping_record) do
-              build(:sleep_record, 
-                    user: user, 
-                    clock_in_time: 1.hour.ago, 
+              build(:sleep_record,
+                    user: user,
+                    clock_in_time: 1.hour.ago,
                     clock_out_time: nil)
             end
 
@@ -73,9 +73,9 @@ RSpec.describe SleepRecord, type: :model do
 
           context 'with non-overlapping clock_in_time' do
             let(:non_overlapping_record) do
-              build(:sleep_record, 
-                    user: user, 
-                    clock_in_time: 3.hours.ago, 
+              build(:sleep_record,
+                    user: user,
+                    clock_in_time: 3.hours.ago,
                     clock_out_time: 2.5.hours.ago)
             end
 
@@ -87,9 +87,9 @@ RSpec.describe SleepRecord, type: :model do
 
         context 'when updating an existing sleep record' do
           let!(:existing_record) do
-            create(:sleep_record, 
-                   user: user, 
-                   clock_in_time: 2.hours.ago, 
+            create(:sleep_record,
+                   user: user,
+                   clock_in_time: 2.hours.ago,
                    clock_out_time: nil)
           end
 
@@ -164,9 +164,9 @@ RSpec.describe SleepRecord, type: :model do
 
       context 'when clock_out_time is present' do
         let(:sleep_record) do
-          build(:sleep_record, 
-                user: user, 
-                clock_in_time: clock_in_time, 
+          build(:sleep_record,
+                user: user,
+                clock_in_time: clock_in_time,
                 clock_out_time: clock_out_time)
         end
 
@@ -179,9 +179,9 @@ RSpec.describe SleepRecord, type: :model do
 
       context 'when clock_out_time is nil' do
         let(:sleep_record) do
-          build(:sleep_record, 
-                user: user, 
-                clock_in_time: clock_in_time, 
+          build(:sleep_record,
+                user: user,
+                clock_in_time: clock_in_time,
                 clock_out_time: nil)
         end
 

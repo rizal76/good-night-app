@@ -36,9 +36,9 @@ class SleepRecord < ApplicationRecord
 
   def clock_out_after_clock_in
     return unless clock_in_time && clock_out_time
-    
+
     if clock_out_time <= clock_in_time
-      errors.add(:clock_out_time, 'must be after clock in time')
+      errors.add(:clock_out_time, "must be after clock in time")
     end
   end
 
@@ -46,18 +46,17 @@ class SleepRecord < ApplicationRecord
     return unless user_id && clock_in_time
 
     overlapping = user.sleep_records.clocked_in
-                    .where('clock_in_time <= ? AND (clock_out_time IS NULL OR clock_out_time > ?)', 
+                    .where("clock_in_time <= ? AND (clock_out_time IS NULL OR clock_out_time > ?)",
                            clock_in_time, clock_in_time)
-    
+
     if overlapping.exists?
-      errors.add(:clock_in_time, 'cannot overlap with existing sleep session')
+      errors.add(:clock_in_time, "cannot overlap with existing sleep session")
     end
   end
 
   def calculate_duration
     return unless clock_in_time && clock_out_time
-    
+
     self.duration = (clock_out_time - clock_in_time).to_i
   end
-
 end

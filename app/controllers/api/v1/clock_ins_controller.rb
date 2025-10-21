@@ -1,6 +1,6 @@
 class Api::V1::ClockInsController < ApplicationController
-  before_action :set_user, only: [:create]
-  before_action :validate_user_exists, only: [:create]
+  before_action :set_user, only: [ :create ]
+  before_action :validate_user_exists, only: [ :create ]
 
   # POST /api/v1/users/:user_id/clock_ins
   def create
@@ -19,7 +19,7 @@ class Api::V1::ClockInsController < ApplicationController
     if service.call
       render json: {
         success: true,
-        message: 'Success to record',
+        message: "Success to record",
         data: {
           sleep_records: SleepRecordBlueprint.render_as_hash(service.sleep_records),
           pagination: service.pagination
@@ -28,7 +28,7 @@ class Api::V1::ClockInsController < ApplicationController
     else
       render json: {
         success: false,
-        message: 'Failed to record',
+        message: "Failed to record",
         errors: service.errors.full_messages
       }, status: :unprocessable_content
     end
@@ -42,12 +42,11 @@ class Api::V1::ClockInsController < ApplicationController
 
   def validate_user_exists
     return if @user.present?
-    
+
     render json: {
       success: false,
-      message: 'User not found',
-      errors: ['User with the given ID does not exist']
+      message: "User not found",
+      errors: [ "User with the given ID does not exist" ]
     }, status: :not_found
   end
-
 end

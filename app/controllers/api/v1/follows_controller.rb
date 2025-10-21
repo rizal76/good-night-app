@@ -1,6 +1,6 @@
 class Api::V1::FollowsController < ApplicationController
-  before_action :set_user, only: [:create, :destroy]
-  before_action :validate_user_exists, only: [:create, :destroy]
+  before_action :set_user, only: [ :create, :destroy ]
+  before_action :validate_user_exists, only: [ :create, :destroy ]
 
   # POST /api/v1/users/:user_id/follows
   def create
@@ -9,13 +9,13 @@ class Api::V1::FollowsController < ApplicationController
     if follow
       render json: {
         success: true,
-        message: 'Successfully followed',
+        message: "Successfully followed",
         data: FollowBlueprint.render_as_hash(follow)
       }, status: :created
     else
       render json: {
         success: false,
-        message: 'Failed to follow',
+        message: "Failed to follow",
         errors: service.errors.full_messages
       }, status: :unprocessable_content
     end
@@ -28,13 +28,13 @@ class Api::V1::FollowsController < ApplicationController
     if unfollowed
       render json: {
         success: true,
-        message: 'Successfully unfollowed',
+        message: "Successfully unfollowed",
         data: FollowBlueprint.render_as_hash(unfollowed)
       }, status: :ok
     else
       render json: {
         success: false,
-        message: 'Failed to unfollow',
+        message: "Failed to unfollow",
         errors: service.errors.full_messages
       }, status: :unprocessable_content
     end
@@ -50,8 +50,8 @@ class Api::V1::FollowsController < ApplicationController
     return if @user.present?
     render json: {
       success: false,
-      message: 'User not found',
-      errors: ['User with the given ID does not exist']
+      message: "User not found",
+      errors: [ "User with the given ID does not exist" ]
     }, status: :not_found
   end
 end

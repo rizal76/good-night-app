@@ -9,10 +9,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: [] do
-        resources :clock_ins, only: [:create]
-        resources :follows, only: [:create, :destroy]
+        resources :clock_ins, only: [ :create ]
+        resources :follows, only: [ :create, :destroy ]
         # Add custom route for fetching following users' sleep records
-        get '/followings/sleep_records', to: 'followings_sleep_records#index'
+        get "/followings/sleep_records", to: "followings_sleep_records#index"
       end
     end
   end

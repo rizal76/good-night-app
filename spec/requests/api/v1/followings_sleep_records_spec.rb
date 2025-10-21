@@ -20,16 +20,16 @@ RSpec.describe 'Api::V1::FollowingsSleepRecords', type: :request do
       # It's already a Time object (like 1.day.ago)
       clock_out_time = duration_sec_ago
     end
-  
+
     # Handle sleep_length - convert to seconds if it's a Duration
     sleep_length_seconds = if sleep_length.is_a?(ActiveSupport::Duration)
                             sleep_length.to_i
-                          else
+    else
                             sleep_length
-                          end
-  
+    end
+
     clock_in_time = clock_out_time - sleep_length_seconds.seconds
-  
+
     attrs = {
       user: user,
       clock_in_time: clock_in_time
@@ -48,7 +48,7 @@ RSpec.describe 'Api::V1::FollowingsSleepRecords', type: :request do
     create(:sleep_record, sleep_record_args(followed2, duration_sec_ago: 2.weeks, sleep_length: 8.hours))
     # Not followed user within last week
     create(:sleep_record, sleep_record_args(not_followed, duration_sec_ago: 2.days, sleep_length: 6.hours))
-  
+
     get "/api/v1/users/#{user.id}/followings/sleep_records"
     expect(response).to have_http_status(:ok)
     json = JSON.parse(response.body)
@@ -56,10 +56,10 @@ RSpec.describe 'Api::V1::FollowingsSleepRecords', type: :request do
     expect(json['data']['sleep_records'].size).to eq(3)
     # Sorted by duration desc: sr1(9h), sr2(8h), sr3(7h)
     durations = json['data']['sleep_records'].map { |r| r['duration'] }
-    expect(durations).to eq([9*60*60, 8*60*60, 7*60*60])
+    expect(durations).to eq([ 9*60*60, 8*60*60, 7*60*60 ])
     # All are from following users
     user_names = json['data']['sleep_records'].map { |r| r['user_name'] }
-    expect(user_names).to all(be_in([followed1.name, followed2.name]))
+    expect(user_names).to all(be_in([ followed1.name, followed2.name ]))
     # Only last week records
     max_created = json['data']['sleep_records'].map { |r| Time.parse(r['clock_in_time']) }.max
     expect(max_created).to be > 1.week.ago

@@ -26,22 +26,22 @@ puts "✅ Created #{users.count} users"
 # Create some follow relationships
 puts "🔗 Creating follow relationships..."
 follow_relationships = [
-  [users[0], users[1]], # Alice follows Bob
-  [users[0], users[2]], # Alice follows Carol
-  [users[1], users[0]], # Bob follows Alice
-  [users[1], users[3]], # Bob follows David
-  [users[2], users[0]], # Carol follows Alice
-  [users[2], users[4]], # Carol follows Eva
-  [users[3], users[1]], # David follows Bob
-  [users[3], users[5]], # David follows Frank
-  [users[4], users[2]], # Eva follows Carol
-  [users[4], users[6]], # Eva follows Grace
-  [users[5], users[3]], # Frank follows David
-  [users[5], users[7]], # Frank follows Henry
-  [users[6], users[4]], # Grace follows Eva
-  [users[6], users[0]], # Grace follows Alice
-  [users[7], users[5]], # Henry follows Frank
-  [users[7], users[1]]  # Henry follows Bob
+  [ users[0], users[1] ], # Alice follows Bob
+  [ users[0], users[2] ], # Alice follows Carol
+  [ users[1], users[0] ], # Bob follows Alice
+  [ users[1], users[3] ], # Bob follows David
+  [ users[2], users[0] ], # Carol follows Alice
+  [ users[2], users[4] ], # Carol follows Eva
+  [ users[3], users[1] ], # David follows Bob
+  [ users[3], users[5] ], # David follows Frank
+  [ users[4], users[2] ], # Eva follows Carol
+  [ users[4], users[6] ], # Eva follows Grace
+  [ users[5], users[3] ], # Frank follows David
+  [ users[5], users[7] ], # Frank follows Henry
+  [ users[6], users[4] ], # Grace follows Eva
+  [ users[6], users[0] ], # Grace follows Alice
+  [ users[7], users[5] ], # Henry follows Frank
+  [ users[7], users[1] ]  # Henry follows Bob
 ]
 
 follow_relationships.each do |follower, followed|

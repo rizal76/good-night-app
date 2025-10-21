@@ -6,7 +6,7 @@ RSpec.describe Follow, type: :model do
     it { should belong_to(:followed).class_name('User') }
   end
 
-  describe 'validations' do    
+  describe 'validations' do
     it { should validate_presence_of(:follower_id) }
     it { should validate_presence_of(:followed_id) }
 
@@ -85,10 +85,10 @@ RSpec.describe Follow, type: :model do
   describe 'factory traits' do
     describe ':with_different_users' do
       it 'creates a follow with custom user names' do
-        follow = create(:follow, :with_different_users, 
-                       follower_name: 'Alice', 
+        follow = create(:follow, :with_different_users,
+                       follower_name: 'Alice',
                        followed_name: 'Bob')
-        
+
         expect(follow.follower.name).to eq('Alice')
         expect(follow.followed.name).to eq('Bob')
       end
@@ -114,7 +114,7 @@ RSpec.describe Follow, type: :model do
 
     it 'enforces unique constraint on follower_id and followed_id' do
       create(:follow, follower: follower, followed: followed)
-      
+
       expect {
         Follow.create!(follower: follower, followed: followed)
       }.to raise_error(ActiveRecord::RecordInvalid)

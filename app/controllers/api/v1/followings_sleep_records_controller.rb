@@ -1,6 +1,6 @@
 class Api::V1::FollowingsSleepRecordsController < ApplicationController
-  before_action :set_user, only: [:index]
-  before_action :validate_user_exists, only: [:index]
+  before_action :set_user, only: [ :index ]
+  before_action :validate_user_exists, only: [ :index ]
 
   # GET /api/v1/users/:user_id/followings/sleep_records
   def index
@@ -15,7 +15,7 @@ class Api::V1::FollowingsSleepRecordsController < ApplicationController
     if service.call
       render json: {
         success: true,
-        message: 'Success',
+        message: "Success",
         data: {
           sleep_records: SleepRecordBlueprint.render_as_hash(service.sleep_records),
           pagination: service.pagination
@@ -24,7 +24,7 @@ class Api::V1::FollowingsSleepRecordsController < ApplicationController
     else
       render json: {
         success: false,
-        message: 'Failed to fetch data',
+        message: "Failed to fetch data",
         errors: service.errors.full_messages
       }, status: :unprocessable_content
     end
@@ -40,8 +40,8 @@ class Api::V1::FollowingsSleepRecordsController < ApplicationController
     return if @user.present?
     render json: {
       success: false,
-      message: 'User not found',
-      errors: ['User with the given ID does not exist']
+      message: "User not found",
+      errors: [ "User with the given ID does not exist" ]
     }, status: :not_found
   end
 end

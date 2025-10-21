@@ -112,11 +112,11 @@ RSpec.describe FollowService, type: :model do
 
     context 'when follow save fails' do
       let(:mock_follow) { instance_double(Follow) }
-      
+
       before do
         allow(Follow).to receive(:new).and_return(mock_follow)
         allow(mock_follow).to receive(:save).and_return(false)
-        
+
         # Create a real ActiveModel::Errors object for the mock
         errors_object = ActiveModel::Errors.new(mock_follow)
         errors_object.add(:base, 'Some error')
