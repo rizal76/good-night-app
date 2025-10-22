@@ -2,6 +2,7 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
+require_relative 'support/time_helper'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 # Uncomment the line below in case you have `--require rails_helper` in the `.rspec` file
@@ -79,6 +80,7 @@ RSpec.configure do |config|
   config.before(:each, type: :request) do
     host! "localhost:#{Capybara.current_driver == :rack_test ? 3000 : 3001}"
   end
+  config.include TimeHelper
 end
 
 # Shoulda Matchers configuration
@@ -88,3 +90,6 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+# Factory load
+FactoryBot::SyntaxRunner.include(TimeHelper)

@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_18_093324) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_22_015939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "timescaledb"
 
   create_table "follows", force: :cascade do |t|
     t.bigint "follower_id", null: false
@@ -24,9 +25,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_18_093324) do
     t.index ["follower_id"], name: "index_follows_on_follower_id"
   end
 
-  create_table "sleep_records", force: :cascade do |t|
+  create_table "sleep_records", primary_key: ["id", "clock_in_time"], force: :cascade do |t|
+    t.bigserial "id", null: false
     t.bigint "user_id", null: false
-    t.datetime "clock_in_time", null: false
+    t.timestamptz "clock_in_time", null: false
     t.datetime "clock_out_time"
     t.integer "duration"
     t.datetime "created_at", null: false
@@ -46,4 +48,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_18_093324) do
   add_foreign_key "follows", "users", column: "followed_id"
   add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "sleep_records", "users"
+  create_hypertable "sleep_records", time_column: "clock_in_time", chunk_time_interval: "1 day", compress_segmentby: "", compress_orderby: "clock_in_time DESC", compress_after: "P7D"
+
+  create_retention_policy "sleep_records", drop_after: "P30D"
 end

@@ -75,3 +75,4 @@ end
 gem "kaminari"
 gem "blueprinter"
 gem "rspec-rails", group: [ :development, :test ]
+gem "timescaledb"

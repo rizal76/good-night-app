@@ -354,6 +354,11 @@ GEM
     thruster (0.1.15-x86_64-linux)
     timecop (0.9.10)
     timeout (0.4.3)
+    timescaledb (0.3.2)
+      activerecord
+      activesupport
+      ostruct
+      pg (~> 1.2)
     tsort (0.2.0)
     turbo-rails (2.0.17)
       actionpack (>= 7.1.0)
@@ -409,6 +414,7 @@ DEPENDENCIES
   stimulus-rails
   thruster
   timecop
+  timescaledb
   turbo-rails
   tzinfo-data
   web-console

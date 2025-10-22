@@ -49,19 +49,19 @@ Copy `.env.example` to `.env` and edit if needed.
 ### Useful Commands
 - Rails Console:
   ```sh
-  ./docker-compose-run.sh run --rm api bin/rails console
+  ./docker-compose-run.sh api bin/rails console
   ```
 - Run database migrations manually:
   ```sh
-  ./docker-compose-run.sh run --rm api bin/rails db:migrate
+  ./docker-compose-run.sh api bin/rails db:migrate
   ```
 - Seed sample data:
   ```sh
-  ./docker-compose-run.sh run --rm api bin/rails db:seed
+  ./docker-compose-run.sh api bin/rails db:seed
   ```
 - Run rubocop
   ```sh
-  ./docker-compose-run.sh run --rm api bundle exec rubocop -f github
+  ./docker-compose-run.sh api bundle exec rubocop -f github
   ```
 
 ## Stack

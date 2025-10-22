@@ -48,7 +48,8 @@ RSpec.describe User, type: :model do
       end
 
       context 'when user has clocked in sleep record' do
-        let!(:clocked_in_record) { create(:sleep_record, user: user, clock_in_time: 1.hour.ago, clock_out_time: nil) }
+        expected_time = Time.parse("2025-10-22 09:18:09.495089000 +0000")
+        let!(:clocked_in_record) { create(:sleep_record, user: user, clock_in_time: expected_time, clock_out_time: nil) }
 
         it 'returns the current sleep session' do
           expect(user.current_sleep_session).to eq(clocked_in_record)
@@ -57,7 +58,8 @@ RSpec.describe User, type: :model do
 
       context 'when user has multiple sleep records' do
         let!(:old_clocked_in) { create(:sleep_record, user: user, clock_in_time: 2.hours.ago, clock_out_time: 1.hour.ago) }
-        let!(:current_clocked_in) { create(:sleep_record, user: user, clock_in_time: 30.minutes.ago, clock_out_time: nil) }
+        time_with_microseconds = 30.minutes.ago.change(usec: 30.minutes.ago.usec)
+        let!(:current_clocked_in) { create(:sleep_record, user: user, clock_in_time: time_with_microseconds, clock_out_time: nil) }
 
         it 'returns the most recent clocked in record' do
           expect(user.current_sleep_session).to eq(current_clocked_in)
