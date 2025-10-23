@@ -72,14 +72,14 @@ class ClockInService
     cached_data = Rails.cache.fetch(cache_key, expires_in: expires_in) do
       records = user.sleep_records.order(created_at: :desc).page(page).per(per_page).to_a
       total_count = user.sleep_records.count
-      
+
       {
         records: records,
         total_count: total_count,
         total_pages: (total_count.to_f / per_page).ceil
       }
     end
-  
+
     @sleep_records = cached_data[:records]
     @pagination = {
       current_page: page,

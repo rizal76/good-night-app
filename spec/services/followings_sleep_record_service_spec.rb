@@ -12,19 +12,19 @@ RSpec.describe FollowingsSleepRecordsService, type: :service do
       before do
         create(:follow, follower: user, followed: following_user_1)
         create(:follow, follower: user, followed: following_user_2)
-        
+
         base_time = 3.days.ago.change(usec: 0)
-        
+
         @sleep_record_longest = following_user_2.sleep_records.create!(
           clock_in_time: microsecond_time(base_time),
           clock_out_time: microsecond_time(base_time + 3.hours)  # 10800s
         )
-        
+
         @sleep_record_medium = following_user_1.sleep_records.create!(
           clock_in_time: microsecond_time(base_time),
           clock_out_time: microsecond_time(base_time + 2.hours)  # 7200s
         )
-        
+
         @sleep_record_shortest = following_user_1.sleep_records.create!(
           clock_in_time: microsecond_time(base_time),
           clock_out_time: microsecond_time(base_time + 1.hour)   # 3600s
@@ -37,7 +37,7 @@ RSpec.describe FollowingsSleepRecordsService, type: :service do
 
       it 'returns sleep records ordered by duration DESC' do
         service.call
-        expect(service.sleep_records.map(&:duration)).to eq([10800, 7200])
+        expect(service.sleep_records.map(&:duration)).to eq([ 10800, 7200 ])
       end
 
       it 'returns correct pagination' do
@@ -177,7 +177,7 @@ RSpec.describe FollowingsSleepRecordsService, type: :service do
         clock_in_time: microsecond_time(10.days.ago),
         clock_out_time: microsecond_time(9.days.ago)
       )
-      
+
       service = described_class.new(user_id: user.id, page: 1, per_page: 10)
       service.call
       expect(service.sleep_records.all? { |r| r.clock_in_time > 1.week.ago }).to be true
@@ -195,7 +195,7 @@ RSpec.describe FollowingsSleepRecordsService, type: :service do
         clock_in_time: microsecond_time(base_time),
         clock_out_time: nil
       )
-      
+
       service = described_class.new(user_id: user.id, page: 1, per_page: 10)
       service.call
       expect(service.sleep_records.all? { |r| r.clock_out_time.present? }).to be true

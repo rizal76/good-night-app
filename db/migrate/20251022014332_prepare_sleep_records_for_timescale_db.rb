@@ -1,9 +1,8 @@
 class PrepareSleepRecordsForTimescaleDb < ActiveRecord::Migration[8.0]
-
   def up
     return unless extension_enabled?('timescaledb')
 
-    # 0. prepare the tables column 
+    # 0. prepare the tables column
     change_column :sleep_records, :clock_in_time, :timestamptz
     change_column :sleep_records, :clock_out_time, :timestamptz
 
@@ -19,7 +18,7 @@ class PrepareSleepRecordsForTimescaleDb < ActiveRecord::Migration[8.0]
   def down
     return unless extension_enabled?('timescaledb')
 
-    # 0. prepare the tables column 
+    # 0. prepare the tables column
     change_column :sleep_records, :clock_in_time, :datetime
     change_column :sleep_records, :clock_out_time, :datetime
 

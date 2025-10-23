@@ -16,7 +16,7 @@ class FollowingsSleepRecordsService
     # **Layer 0: Base caches (optimized) - for user and followwing ids data**
 
     # fist process is get following ids for current user
-    # Get user using cache 
+    # Get user using cache
     user = fetch_user_with_cache
     return false unless user
 
@@ -33,7 +33,7 @@ class FollowingsSleepRecordsService
     @sleep_records, @pagination = Rails.cache.fetch(cache_key, expires_in: cache_short_duration) do
       load_paginated_sleep_records(following_ids)
     end
-    
+
     true
   rescue => e
     errors.add(:base, "Failed to load followings' sleep records: #{e.message}")
@@ -51,7 +51,7 @@ class FollowingsSleepRecordsService
 
   def fetch_following_ids_with_cache(user)
     cache_key = CacheKeyHelper.following_ids_key(user.id)
-    
+
     Rails.cache.fetch(cache_key, expires_in: Rails.configuration.sleep_record.cache_following_duration) do
       user.following.pluck(:id)
     end
@@ -61,7 +61,7 @@ class FollowingsSleepRecordsService
   def load_paginated_sleep_records(following_ids)
     # Get cached total count
     total_count = cached_total_count(user_id, following_ids)
-    
+
     # Hit database using timescaleDB - suitable for time based data - can handle heavy traffic
     records = SleepRecord
       .includes(:user)
@@ -82,13 +82,11 @@ class FollowingsSleepRecordsService
   def cached_total_count(user_id, following_ids)
     cache_key = CacheKeyHelper.followings_sleep_records_count(user_id)
     Rails.cache.fetch(cache_key, expires_in: cache_longer_duration, race_condition_ttl: cache_race_condition_ttl) do
-
       SleepRecord
         .where(user_id: following_ids)
         .this_week
         .clocked_out
         .count
-      
     end
   end
 
@@ -102,7 +100,7 @@ class FollowingsSleepRecordsService
   end
 
   def cache_race_condition_ttl
-    Rails.configuration.sleep_record.cache_race_condition_ttl 
+    Rails.configuration.sleep_record.cache_race_condition_ttl
   end
 
   def cache_longer_duration

@@ -2,11 +2,11 @@ class SleepRecord < ApplicationRecord
   extend Timescaledb::ActsAsHypertable
 
   acts_as_hypertable(
-    time_column: 'clock_in_time',
-    chunk_time_interval: '1 day',
-    compress_orderby: 'clock_in_time DESC',
-    compress_after: '7 days',
-    drop_after: '30 days'
+    time_column: "clock_in_time",
+    chunk_time_interval: "1 day",
+    compress_orderby: "clock_in_time DESC",
+    compress_after: "7 days",
+    drop_after: "30 days"
   )
   # Associations
   belongs_to :user

@@ -5,8 +5,8 @@ class AddSleepRecordsRetentionPolicies < ActiveRecord::Migration[8.0]
     # Check if retention policy already exists
     retention_exists = execute <<~SQL
       SELECT EXISTS (
-        SELECT 1 FROM timescaledb_information.jobs 
-        WHERE proc_name = 'policy_retention' 
+        SELECT 1 FROM timescaledb_information.jobs#{' '}
+        WHERE proc_name = 'policy_retention'#{' '}
         AND hypertable_name = 'sleep_records'
       ) as policy_exists;
     SQL
@@ -20,14 +20,14 @@ class AddSleepRecordsRetentionPolicies < ActiveRecord::Migration[8.0]
     # Check if compression policy already exists
     compression_exists = execute <<~SQL
       SELECT EXISTS (
-        SELECT 1 FROM timescaledb_information.jobs 
-        WHERE proc_name = 'policy_compression' 
+        SELECT 1 FROM timescaledb_information.jobs#{' '}
+        WHERE proc_name = 'policy_compression'#{' '}
         AND hypertable_name = 'sleep_records'
       ) as policy_exists;
     SQL
 
     unless compression_exists.first['policy_exists']
-      
+
       execute <<~SQL
         ALTER TABLE sleep_records SET (
           timescaledb.compress,

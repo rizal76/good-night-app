@@ -26,9 +26,9 @@ module App
     config.sleep_record.cache_duration = 2.minutes
     config.sleep_record.longer_cache_duration = 10.minutes
     config.sleep_record.cache_race_condition_ttl = 30.seconds
-    # This rarely change, we use it for getting data feed, 
+    # This rarely change, we use it for getting data feed,
     # We will update this on follow and unfollow action too
-    config.sleep_record.cache_following_duration = 1.days 
+    config.sleep_record.cache_following_duration = 1.days
 
     # Configuration for the application, engines, and railties goes here.
     #

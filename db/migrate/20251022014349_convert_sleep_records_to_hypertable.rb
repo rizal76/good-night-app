@@ -5,7 +5,7 @@ class ConvertSleepRecordsToHypertable < ActiveRecord::Migration[8.0]
     # Check if table is already a hypertable
     result = execute <<~SQL
       SELECT EXISTS (
-        SELECT 1 FROM timescaledb_information.hypertables 
+        SELECT 1 FROM timescaledb_information.hypertables#{' '}
         WHERE hypertable_name = 'sleep_records'
       ) as is_hypertable;
     SQL
@@ -15,7 +15,7 @@ class ConvertSleepRecordsToHypertable < ActiveRecord::Migration[8.0]
     unless is_hypertable
       execute <<~SQL
         SELECT create_hypertable(
-          'sleep_records', 
+          'sleep_records',#{' '}
           'clock_in_time',
           chunk_time_interval => INTERVAL '1 day',
           if_not_exists => TRUE

@@ -1,7 +1,6 @@
 # This helper to make sure the cache key is same across code
 # Prevent redundant writing the keys
 module CacheKeyHelper
-    
     def self.following_ids_key(user_id)
       "user_#{user_id}_following_ids"
     end
@@ -21,5 +20,4 @@ module CacheKeyHelper
     def self.followings_sleep_records_count(user_id)
       "followings_sleep_records_count:#{user_id}"
     end
-
 end
