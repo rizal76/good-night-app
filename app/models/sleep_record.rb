@@ -121,7 +121,7 @@ class SleepRecord < ApplicationRecord
                       ON sleep_records.user_id = user_ids.id"
 
       # Sanitize and bind the IDs safely
-      safe_sql = ActiveRecord::Base.sanitize_sql_array([sql_template, *safe_following_ids])
+      safe_sql = ActiveRecord::Base.sanitize_sql_array([ sql_template, *safe_following_ids ])
 
       relation.from(safe_sql)
     end
