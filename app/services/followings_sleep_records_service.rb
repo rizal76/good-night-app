@@ -62,16 +62,11 @@ class FollowingsSleepRecordsService
     # Get cached total count
     total_count = cached_total_count(user_id, following_ids)
 
-    # Hit database using timescaleDB - suitable for time based data - can handle heavy traffic
-    records = SleepRecord
-      .includes(:user)
-      .where(user_id: following_ids)
-      .this_week
-      .clocked_out
-      .order(duration: :desc)
-      .offset((page - 1) * per_page)
-      .limit(per_page)
-      .to_a
+    # Hit hypertable using timescaleDB - suitable for time based data - can handle heavy traffic
+    # This is the most important part of the service
+    # TimescaleDB also have capability for compression and data retention
+    # This very suitable for this case, since in the requirement we only need last 7 days data
+    records = SleepRecord.paginated_by_users(following_ids, page, per_page).to_a
 
     [
       records,
@@ -82,11 +77,7 @@ class FollowingsSleepRecordsService
   def cached_total_count(user_id, following_ids)
     cache_key = CacheKeyHelper.followings_sleep_records_count(user_id)
     Rails.cache.fetch(cache_key, expires_in: cache_longer_duration, race_condition_ttl: cache_race_condition_ttl) do
-      SleepRecord
-        .where(user_id: following_ids)
-        .this_week
-        .clocked_out
-        .count
+      SleepRecord.count_by_users(following_ids)
     end
   end
 

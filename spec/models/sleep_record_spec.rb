@@ -317,4 +317,84 @@ RSpec.describe SleepRecord, type: :model do
       end
     end
   end
+
+
+  describe 'sleep record following data' do
+
+    let(:user1) { create(:user) }
+    let(:user2) { create(:user) }
+  
+    let!(:record1) do 
+      create(:sleep_record, 
+             user: user1, 
+             clock_in_time: 3.days.ago, 
+             clock_out_time: 3.days.ago + 8.hours)  # duration = 28800
+    end
+    
+    let!(:record2) do 
+      create(:sleep_record, 
+             user: user2, 
+             clock_in_time: 2.days.ago, 
+             clock_out_time: 2.days.ago + 6.hours)  # duration = 21600
+    end
+  
+    describe '.paginated_by_users' do
+      it 'returns correct records for small following_ids' do
+        following_ids = [user1.id, user2.id]
+        
+        records = described_class.paginated_by_users(following_ids, 1, 2)
+        
+        expect(records.size).to eq(2)
+        expect(records.first.duration).to eq(28800)  # ✅ 8 hours in seconds
+        expect(records.second.duration).to eq(21600) # ✅ 6 hours in seconds
+      end
+  
+      it 'paginates correctly' do
+        following_ids = [user1.id]
+        records = described_class.paginated_by_users(following_ids, 1, 1)
+        expect(records.size).to eq(1)
+      end
+  
+      it 'returns empty array for blank ids' do
+        expect(described_class.paginated_by_users([], 1, 10)).to eq([])
+        expect(described_class.paginated_by_users(nil, 1, 10)).to eq([])
+      end
+  
+      it 'includes user association' do
+        following_ids = [user1.id]
+        records = described_class.paginated_by_users(following_ids, 1, 10)
+        expect(records.first.user).to eq(user1)
+      end
+    end
+  
+    describe '.count_by_users' do
+      it 'returns correct count' do
+        following_ids = [user1.id, user2.id]
+        expect(described_class.count_by_users(following_ids)).to eq(2)
+      end
+  
+      it 'returns 0 for blank ids' do
+        expect(described_class.count_by_users([])).to eq(0)
+        expect(described_class.count_by_users(nil)).to eq(0)
+      end
+    end
+  
+    describe '.apply_user_filter' do
+      let(:small_ids) { [1, 2, 3] }
+      let(:large_ids) { (1..Rails.configuration.sleep_record.normal_following_count+1).to_a }
+  
+      it 'uses WHERE IN for small arrays' do
+        relation = described_class.apply_user_filter(described_class.all, small_ids)
+        sql = relation.to_sql
+        expect(sql).to include('WHERE "sleep_records"."user_id" IN')
+      end
+  
+      it 'uses JOIN for large arrays' do
+        relation = described_class.apply_user_filter(described_class.all, large_ids)
+        sql = relation.to_sql
+        expect(sql).to include('INNER JOIN (VALUES')
+      end
+    end
+
+  end
 end

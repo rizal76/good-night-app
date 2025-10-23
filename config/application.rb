@@ -29,6 +29,11 @@ module App
     # This rarely change, we use it for getting data feed,
     # We will update this on follow and unfollow action too
     config.sleep_record.cache_following_duration = 1.days
+    # This used to differintiate which user that has many following_ids
+    # Since we want to handle the query different
+    # for lesser we direclty using WHERE IN, but for large this can be slower
+    # so we will use JOIN instead
+    config.sleep_record.normal_following_count = 100
 
     # Configuration for the application, engines, and railties goes here.
     #
