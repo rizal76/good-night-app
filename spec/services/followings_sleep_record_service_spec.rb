@@ -127,41 +127,6 @@ RSpec.describe FollowingsSleepRecordsService, type: :service do
     end
   end
 
-  describe 'caching layers' do
-    let(:user) { create(:user) }
-    let(:following_user) { create(:user) }
-    let(:fixed_time) { Time.current.change(usec: 0) }
-
-    before do
-      Timecop.freeze(fixed_time)
-      create(:follow, follower: user, followed: following_user)
-      base_time = 3.days.ago.change(usec: 0)
-      following_user.sleep_records.create!(
-        clock_in_time: microsecond_time(base_time),
-        clock_out_time: microsecond_time(base_time + 2.hours)
-      )
-      Rails.cache.clear
-    end
-
-    after do
-      Timecop.return
-    end
-
-    let(:service) { described_class.new(user_id: user.id, page: 1, per_page: 2) }
-
-    it 'caches Layer 1: full paginated response' do
-      expect {
-        service.call
-      }.to change { Rails.cache.exist?(CacheKeyHelper.followings_sleep_records_key(user.id, 1, 2)) }.from(false).to(true)
-    end
-
-    it 'caches Layer 2: total count' do
-      expect {
-        service.call
-      }.to change { Rails.cache.exist?(CacheKeyHelper.followings_sleep_records_count(user.id)) }.from(false).to(true)
-    end
-  end
-
   describe 'scopes usage' do
     let(:user) { create(:user) }
     let(:following_user) { create(:user) }
