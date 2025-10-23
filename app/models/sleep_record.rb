@@ -1,6 +1,11 @@
 class SleepRecord < ApplicationRecord
   extend Timescaledb::ActsAsHypertable
 
+  # This hypertable using timescale db for better performance
+  # we can also compress and drop table to improve table size considering large data
+  # for partition number depends on the disk on infraside, assuming using managed cloud storage
+  # so for partition not using it for now, but when we want to using self managed disk
+  # partition number can be set based disk size
   acts_as_hypertable(
     time_column: "clock_in_time",
     chunk_time_interval: "1 day",
