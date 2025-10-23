@@ -10,7 +10,7 @@ class OptimizeIndexSleepRecords < ActiveRecord::Migration[8.0]
     # this based on ERS Rule (Equality - Range - Sort) standard
     execute <<~SQL
       CREATE INDEX idx_sleep_records_optimized
-      ON sleep_records (user_id, clock_in_time, duration DESC) 
+      ON sleep_records (user_id, clock_in_time, duration DESC)#{' '}
       WHERE clock_out_time IS NOT NULL;
     SQL
   end

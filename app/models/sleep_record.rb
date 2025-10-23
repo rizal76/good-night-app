@@ -76,10 +76,10 @@ class SleepRecord < ApplicationRecord
 
   def self.paginated_by_users(following_ids, page, per_page)
     return [] if following_ids.blank?
-    
+
     base_relation = includes(:user)
     base_relation = self.apply_user_filter(base_relation, following_ids)
-    
+
     base_relation
       .this_week
       .clocked_out
@@ -93,7 +93,7 @@ class SleepRecord < ApplicationRecord
 
     base_relation = self
     base_relation = self.apply_user_filter(base_relation, following_ids)
-    
+
     base_relation
       .this_week
       .clocked_out
@@ -108,9 +108,9 @@ class SleepRecord < ApplicationRecord
     if following_ids.size <= Rails.configuration.sleep_record.normal_following_count
       relation.where(user_id: following_ids)
     else
-      values_clause = following_ids.map { |id| "(#{id})" }.join(',')
-      relation.from("sleep_records 
-                     INNER JOIN (VALUES #{values_clause}) AS user_ids(id) 
+      values_clause = following_ids.map { |id| "(#{id})" }.join(",")
+      relation.from("sleep_records
+                     INNER JOIN (VALUES #{values_clause}) AS user_ids(id)
                      ON sleep_records.user_id = user_ids.id")
     end
   end
