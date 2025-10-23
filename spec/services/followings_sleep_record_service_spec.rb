@@ -130,8 +130,10 @@ RSpec.describe FollowingsSleepRecordsService, type: :service do
   describe 'caching layers' do
     let(:user) { create(:user) }
     let(:following_user) { create(:user) }
+    let(:fixed_time) { Time.current.change(usec: 0) }
 
     before do
+      Timecop.freeze(fixed_time)
       create(:follow, follower: user, followed: following_user)
       base_time = 3.days.ago.change(usec: 0)
       following_user.sleep_records.create!(
@@ -139,6 +141,10 @@ RSpec.describe FollowingsSleepRecordsService, type: :service do
         clock_out_time: microsecond_time(base_time + 2.hours)
       )
       Rails.cache.clear
+    end
+
+    after do
+      Timecop.return
     end
 
     let(:service) { described_class.new(user_id: user.id, page: 1, per_page: 2) }
