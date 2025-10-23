@@ -103,15 +103,27 @@ class SleepRecord < ApplicationRecord
   private
 
   def self.apply_user_filter(relation, following_ids)
-    # We treat as different due to for a lot of following_ids filter WHERE IN
+    # Ensure all IDs are integers to prevent manipulation
+    safe_following_ids = following_ids.map(&:to_i).reject(&:zero?).uniq
+
+    # Treat as different due to for a lot of following_ids filter WHERE IN
     # will be not effecient so we use JOIN instead
-    if following_ids.size <= Rails.configuration.sleep_record.normal_following_count
-      relation.where(user_id: following_ids)
+    if safe_following_ids.size <= Rails.configuration.sleep_record.normal_following_count
+      relation.where(user_id: safe_following_ids) # Active Record handles sanitization here
     else
-      values_clause = following_ids.map { |id| "(#{id})" }.join(",")
-      relation.from("sleep_records
-                     INNER JOIN (VALUES #{values_clause}) AS user_ids(id)
-                     ON sleep_records.user_id = user_ids.id")
+      # Safely construct the VALUES clause using parameter binding.
+      # Create an array of placeholders for the binding.
+      placeholders = Array.new(safe_following_ids.size, "(?)").join(",")
+
+      # The SQL string with placeholders for each ID tuple
+      sql_template = "sleep_records
+                      INNER JOIN (VALUES #{placeholders}) AS user_ids(id)
+                      ON sleep_records.user_id = user_ids.id"
+
+      # Sanitize and bind the IDs safely
+      safe_sql = ActiveRecord::Base.sanitize_sql_array([sql_template, *safe_following_ids])
+
+      relation.from(safe_sql)
     end
   end
 end
