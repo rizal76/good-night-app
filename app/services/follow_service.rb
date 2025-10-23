@@ -16,6 +16,7 @@ class FollowService
     return nil unless valid?
     @follow = Follow.new(follower_id: follower_id, followed_id: followed_id)
     if @follow.save
+      invalidate_cache_following_ids
       @follow
     else
       errors.merge!(@follow.errors)
@@ -27,6 +28,7 @@ class FollowService
     return nil unless valid_for_unfollow?
     existing = Follow.find_by(follower_id: follower_id, followed_id: followed_id)
     if existing&.destroy
+      invalidate_cache_following_ids
       existing
     else
       errors.add(:base, "Not following this user")
@@ -53,5 +55,10 @@ class FollowService
     follower_exists
     followed_exists
     errors.empty?
+  end
+
+  def invalidate_cache_following_ids
+    cache_key = CacheKeyHelper.following_ids_key(follower_id)
+    Rails.cache.delete(cache_key)
   end
 end

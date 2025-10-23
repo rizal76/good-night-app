@@ -12,33 +12,104 @@ class FollowingsSleepRecordsService
 
   def call
     return false unless valid?
-    user = User.includes(:following).find_by(id: user_id)
+    # We will using multi layer cache for better performance
+    # **Layer 0: Base caches (optimized) - for user and followwing ids data**
+
+    # fist process is get following ids for current user
+    # Get user using cache 
+    user = fetch_user_with_cache
     return false unless user
 
-    following_ids = user.following.select(:id)
-
-    # Collect last 1 week of sleep records for all followings
-    # Use includes(:user) for Blueprinter
-    relation = SleepRecord.includes(:user)
-      .where(user_id: following_ids)
-      .where(clock_in_time: 1.week.ago..Time.current)
-      .where.not(clock_out_time: nil)
-
-    cache_key = "followings_sleep_records_user_#{user.id}_page_#{page}_per_#{per_page}_max_updated_#{relation.maximum(:updated_at)&.to_i}"
-    expires_in = Rails.configuration.sleep_record.cache_duration
-    @sleep_records = Rails.cache.fetch(cache_key, expires_in: expires_in) do
-      relation.order(duration: :desc).page(page).per(per_page).to_a
+    # Get following ids using cache, this we will cache with long duration
+    # In this case 1 days is safe. Since we will invalidate when follow / unfollow happen
+    following_ids = fetch_following_ids_with_cache(user)
+    if following_ids.empty? # Early return for users with no followings
+      errors.add(:base, "You don't have any following data")
+      return false
     end
-    total_count = relation.count
-    @pagination = {
+
+    # **Layer 1: Full paginated response - shorter duration**
+    cache_key = CacheKeyHelper.followings_sleep_records_key(user.id, page, per_page)
+    @sleep_records, @pagination = Rails.cache.fetch(cache_key, expires_in: cache_short_duration) do
+      load_paginated_sleep_records(following_ids)
+    end
+    
+    true
+  rescue => e
+    errors.add(:base, "Failed to load followings' sleep records: #{e.message}")
+    false
+  end
+
+  private
+
+  def fetch_user_with_cache
+    cache_key = CacheKeyHelper.user_key(user_id)
+    Rails.cache.fetch(cache_key, expires_in: Rails.configuration.sleep_record.cache_following_duration) do
+      User.find_by(id: user_id)
+    end
+  end
+
+  def fetch_following_ids_with_cache(user)
+    cache_key = CacheKeyHelper.following_ids_key(user.id)
+    
+    Rails.cache.fetch(cache_key, expires_in: Rails.configuration.sleep_record.cache_following_duration) do
+      user.following.pluck(:id)
+    end
+  end
+
+  # **Layer 2: Get cache for total count and paginated sleep record - longer duration**
+  def load_paginated_sleep_records(following_ids)
+    # Get cached total count
+    total_count = cached_total_count(user_id, following_ids)
+    
+    # Hit database using timescaleDB - suitable for time based data - can handle heavy traffic
+    records = SleepRecord
+      .includes(:user)
+      .where(user_id: following_ids)
+      .this_week
+      .clocked_out
+      .order(duration: :desc)
+      .offset((page - 1) * per_page)
+      .limit(per_page)
+      .to_a
+
+    [
+      records,
+      build_pagination(total_count, page, per_page)
+    ]
+  end
+
+  def cached_total_count(user_id, following_ids)
+    cache_key = CacheKeyHelper.followings_sleep_records_count(user_id)
+    Rails.cache.fetch(cache_key, expires_in: cache_longer_duration, race_condition_ttl: cache_race_condition_ttl) do
+
+      SleepRecord
+        .where(user_id: following_ids)
+        .this_week
+        .clocked_out
+        .count
+      
+    end
+  end
+
+  def build_pagination(total_count, page, per_page)
+    {
       current_page: page,
       per_page: per_page,
       total_pages: (total_count / per_page.to_f).ceil,
       total_count: total_count
     }
-    true
-  rescue => e
-    errors.add(:base, "Failed to load followings' sleep records: #{e.message}")
-    false
+  end
+
+  def cache_race_condition_ttl
+    Rails.configuration.sleep_record.cache_race_condition_ttl 
+  end
+
+  def cache_longer_duration
+    Rails.configuration.sleep_record.longer_cache_duration
+  end
+
+  def cache_short_duration
+    Rails.configuration.sleep_record.cache_duration
   end
 end

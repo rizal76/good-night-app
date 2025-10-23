@@ -79,10 +79,11 @@ RSpec.describe 'Api::V1::FollowingsSleepRecords', type: :request do
   it 'returns empty result if no followings or no recent records' do
     lonely = create(:user)
     get "/api/v1/users/#{lonely.id}/followings/sleep_records"
-    expect(response).to have_http_status(:ok)
+    expect(response).to have_http_status(:unprocessable_content)
     json = JSON.parse(response.body)
-    expect(json['data']['sleep_records']).to eq([])
-    expect(json['data']['pagination']['total_count']).to eq(0)
+    expect(json['success']).to eq(false)
+    expect(json['message']).to eq("Failed to fetch data")
+    expect(json['errors']).to include("You don't have any following data")
   end
 
   it 'returns not found for unknown user' do

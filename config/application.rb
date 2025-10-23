@@ -16,13 +16,19 @@ module App
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
-    # Custom application config
+    # Ideally for every environment the config will be different
+    # I put here's just to simplicity
     config.default_page = 1
     config.default_per_page = 20
     config.sleep = ActiveSupport::OrderedOptions.new
     config.sleep.min_duration_seconds = 600
     config.sleep_record = ActiveSupport::OrderedOptions.new
     config.sleep_record.cache_duration = 2.minutes
+    config.sleep_record.longer_cache_duration = 10.minutes
+    config.sleep_record.cache_race_condition_ttl = 30.seconds
+    # This rarely change, we use it for getting data feed, 
+    # We will update this on follow and unfollow action too
+    config.sleep_record.cache_following_duration = 1.days 
 
     # Configuration for the application, engines, and railties goes here.
     #

@@ -178,7 +178,7 @@ RSpec.describe ClockInService, type: :model do
       service = ClockInService.new(valid_attributes.merge(page: 1, per_page: 2))
 
       expect(Rails.cache).to receive(:fetch).with(
-        /user_#{user.id}_sleep_records_page_1_per_2_/,
+        /user_#{user.id}_sleep_records_page_1_per_2_data/,
         expires_in: 2.minutes
       )
       service.call
