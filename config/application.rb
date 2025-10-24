@@ -21,7 +21,7 @@ module App
     config.default_page = 1
     config.default_per_page = 20
     config.sleep = ActiveSupport::OrderedOptions.new
-    config.sleep.min_duration_seconds = 600
+    config.sleep.min_duration_seconds = 60
     config.sleep_record = ActiveSupport::OrderedOptions.new
     config.sleep_record.cache_duration = 2.minutes
     config.sleep_record.longer_cache_duration = 10.minutes
