@@ -164,8 +164,8 @@ RSpec.describe 'Api::V1::ClockIns', type: :request do
           json_response = JSON.parse(response.body)
           sleep_records = json_response['data']['sleep_records']
           # Should be ordered by created_at desc (newest first)
-          expect(sleep_records.first['id'].first).to eq(user.sleep_records.last.id.first) # newest record
-          expect(sleep_records.last['id'].first).to eq(old_record.id.first) # oldest record
+          expect(sleep_records.first['id']).to eq(user.sleep_records.last.id.first) # newest record
+          expect(sleep_records.last['id']).to eq(old_record.id.first) # oldest record
         end
       end
     end
