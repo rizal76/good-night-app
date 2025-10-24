@@ -76,3 +76,8 @@ gem "kaminari"
 gem "blueprinter"
 gem "rspec-rails", group: [ :development, :test ]
 gem "timescaledb"
+
+# later we can sending the app metric
+# so we know our app performance
+# gem "opentelemetry-sdk"
+# gem "opentelemetry-instrumentation-all"
